@@ -1,16 +1,12 @@
-import telegram
 from telegram.ext import Updater , CommandHandler
 
-tok = '1292823392:AAERdhM6yeCQaZPy4WdfkUBOn5vUyn7GEX4'
+updater = Updater('1292823392:AAERdhM6yeCQaZPy4WdfkUBOn5vUyn7GEX4')
 
-myupdater = Updater(token=tok)
-mydispatcher = myupdater.dispatcher
-
-def start(bot , update ):
+def start(bot , update , args):
     chat_id = update.message.chat_id
-    bot.sendMessage(chat_id , 'hellow')
+    bot.sendChatAction(chat_id , 'TYPING');
+    bot.sendMessage(chat_id , 'your name is: ' + args[0])
 
-start_command = CommandHandler('start' , start )
-mydispatcher.add_handler(start_command)
-myupdater.start_polling()
-myupdater.idle()
+start_command = CommandHandler('start' , start , pass_args = True)
+updater.dispatcher.add_handler(start_command)
+updater.start_polling()
