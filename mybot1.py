@@ -1,7 +1,7 @@
 import telegram
 from telegram.ext import Updater , CommandHandler
 
-tok = '1292823392:AAHyY7c9Scd3dw429rz6rPct1ohy5_cERRg'
+tok = '1292823392:AAERdhM6yeCQaZPy4WdfkUBOn5vUyn7GEX4'
 
 def start(bot , update ):
     chat_id = update.message.chat_id
