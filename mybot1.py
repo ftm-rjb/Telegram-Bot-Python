@@ -1,5 +1,5 @@
 from telegram.ext import Updater , CommandHandler
-TOKEN = '1292823392:AAERdhM6yeCQaZPy4WdfkUBOn5vUyn7GEX4'
+TOKEN = '1292823392:AAHyY7c9Scd3dw429rz6rPct1ohy5_cERRg'
 
 updater = Updater(TOKEN)
 
