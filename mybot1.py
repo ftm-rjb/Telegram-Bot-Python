@@ -12,3 +12,4 @@ try:
 except NetworkError():
     pass
 updater.start_polling()
+print('working')
