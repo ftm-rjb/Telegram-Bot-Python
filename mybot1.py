@@ -1,8 +1,7 @@
 from telegram.ext import Updater , CommandHandler
 TOKEN = '1292823392:AAERdhM6yeCQaZPy4WdfkUBOn5vUyn7GEX4'
-REQUEST_KWARGS={'proxy_url': 'http://188.120.232.181:8118/'}
 
-updater = Updater(TOKEN, request_kwargs=REQUEST_KWARGS)
+updater = Updater(TOKEN)
 
 def start(bot , update ):
     chat_id = update.message.chat_id
