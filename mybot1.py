@@ -10,6 +10,7 @@ def hi(bot , update , args):
     bot.sendChatAction(chat_id , 'TYPING')
     bot.sendMessage(chat_id , 'hello' + args[0])
     bot.sendMessage(chat_id , 'your id is:' + args[1])
+    bot.send_contacts(chat_id)
 
 def main():
     updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
@@ -21,7 +22,6 @@ def main():
     #updater.dispatcher.add_handler(one_poll)
     updater.start_polling()
     updater.idle()
-
 
 if __name__ == '__main__':
     main()
