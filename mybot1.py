@@ -13,7 +13,7 @@ def hi(bot , update , args):
 
 def main():
     updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
-    hi_command = CommandHandler('hi' , hi)
+    hi_command = CommandHandler('hi' , hi , pass_args = True)
     one_massage = MessageHandler(Filters.all , hi)
     one_poll = PollAnswerHandler(hi)
     updater.dispatcher.add_handler(hi_command)
