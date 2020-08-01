@@ -14,18 +14,17 @@ def hi(bot , update , args):
 def main():
     updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
     hi_command = CommandHandler('hi' , hi , pass_args = True)
-    one_massage = MessageHandler(Filters.all , hi)
-    one_poll = PollAnswerHandler(hi)
+    #one_massage = MessageHandler(Filters.all , hi)
+    #one_poll = PollAnswerHandler(hi)
     updater.dispatcher.add_handler(hi_command)
-    updater.dispatcher.add_handler(one_massage)
-    updater.dispatcher.add_handler(one_poll)
+    #updater.dispatcher.add_handler(one_massage)
+    #updater.dispatcher.add_handler(one_poll)
     updater.start_polling()
     updater.idle()
 
 
 if __name__ == '__main__':
     main()
-    updater.stop()
 '''updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
                           url_path=TOKEN)
