@@ -14,7 +14,8 @@ def start(bot , update , args):
 
 def contacts(bot , update ):
     chat_id = update.message.chat_id
-    bot.sendContacts(chat_id , phone_number=09125384132, first_name='mom', last_name='mah')
+    bot.sendContacts(chat_id , phone_number='09125384132'
+    , first_name='mom', last_name='mah')
 
 def main():
     updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
