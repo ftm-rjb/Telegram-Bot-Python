@@ -4,7 +4,6 @@ import telegram
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-import matplotlib.pyplot as plt
 import random
 import urllib.request
 import json
@@ -47,18 +46,30 @@ def nemoodar(update,context):
     tarjom=translator.translate(matn,dest='fa')
     context.bot.send_message(chat_id=update.effective_chat.id,text=tarjom.text)
 
+def url():
+    urlv = 'http://google.com'
+    url=urllib.request.urlopen(urlv)
+    res = url.read()
+    #jsondata=res.decode(encoding='UTF-8')
+
+    dict=json.loads(res)
+    print(dict)
+
+
 mybot = telegram.Bot(token=tok)
 dictinfo=mybot.get_me()
 updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
 start_command = CommandHandler('start' , start , pass_args = True)
 tools_command = CommandHandler('tools',tools)
 nemoodar_command = CommandHandler('nemoodar',nemoodar)
+url_command = CommandHandler('url',url)
 #one_massage = MessageHandler(Filters.all , hi)
 #one_poll = PollAnswerHandler(hi)
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
 updater.dispatcher.add_handler(start_command)
 updater.dispatcher.add_handler(tools_command)
 updater.dispatcher.add_handler(nemoodar_command)
+updater.dispatcher.add_handler(url_command)
 #updater.dispatcher.add_handler(one_massage)
 #updater.dispatcher.add_handler(one_poll)
 updater.start_polling()
