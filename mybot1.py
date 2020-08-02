@@ -16,7 +16,7 @@ TOKEN = '1329017306:AAEdUNxL56_7y9orx7ci8ak5-pl4C-GbDmA'
 
 
 def start(bot , update , args):
-    chat_id = update.effective.chat_id
+    chat_id = update.message.chat_id
     first = update.message.chat.first_name
     bot.sendChatAction(chat_id , 'TYPING')
     bot.sendMessage(chat_id , 'hello {first}'.format(first = first))
@@ -33,19 +33,19 @@ def button(update, context):
     query.answer()
     if query.data =='gc':
         #درخواست از کاربر برای ورود داده
-        context.bot.send_message(chat_id=update.effective_chat.id, text="لیست اعداد را مانند مثال برای دریافت نمودار دایره ای وارد کنید [1,2,3]")
+        context.bot.send_message(chat_id=update.message.chat_id, text="لیست اعداد را مانند مثال برای دریافت نمودار دایره ای وارد کنید [1,2,3]")
 
     elif query.data=='t2f':
-        context.bot.send_message(chat_id=update.effective_chat.id, text="متن خود را برای ترجمه به فارسی وارد بکنید ")
+        context.bot.send_message(chat_id=update.message.chat_id, text="متن خود را برای ترجمه به فارسی وارد بکنید ")
 
 def nemoodar(update,context):
 
     matn=update.message.text
     translator=Translator(service_urls=['translate.google.com'])
     tarjom=translator.translate(matn,dest='fa')
-    context.bot.send_message(chat_id=update.effective_chat.id,text=tarjom.text)
+    context.bot.send_message(chat_id=update.message.chat_id,text=tarjom.text)
 
-def url():
+def myurl():
     urlv = 'http://google.com'
     url=urllib.request.urlopen(urlv)
     res = url.read()
@@ -61,7 +61,7 @@ updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
 start_command = CommandHandler('start' , start , pass_args = True)
 tools_command = CommandHandler('tools',tools)
 nemoodar_command = CommandHandler('nemoodar',nemoodar)
-url_command = CommandHandler('url',url)
+url_command = CommandHandler('url',myurl)
 #one_massage = MessageHandler(Filters.all , hi)
 #one_poll = PollAnswerHandler(hi)
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
