@@ -7,7 +7,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import random
 import urllib.request
 import json
-import geocoder
 from googletrans import Translator
 
 #import os
@@ -56,7 +55,7 @@ def url():
     print(dict)
 
 
-mybot = telegram.Bot(token=tok)
+mybot = telegram.Bot(token=TOKEN)
 dictinfo=mybot.get_me()
 updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
 start_command = CommandHandler('start' , start , pass_args = True)
