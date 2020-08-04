@@ -1,4 +1,4 @@
-from telegram.ext import Updater , CommandHandler , MessageHandler 
+from telegram.ext import Updater , CommandHandler , MessageHandler
 from telegram.ext import PollAnswerHandler , CallbackQueryHandler , InlineQueryHandler
 import telegram
 from telegram import InlineQueryResultArticle, InputTextMessageContent
@@ -22,22 +22,22 @@ def start(bot , update , args):
     bot.sendChatAction(chat_id , 'TYPING')
     bot.sendMessage(chat_id , 'hello {first}'.format(first = first))
 
-def tools(update, context):
+def tools(bot , update):
     mykeyboard = [[InlineKeyboardButton("نمودار دایره ای", callback_data='gc')],
                   [InlineKeyboardButton("ترجمه به فارسی", callback_data='t2f')],
                   [InlineKeyboardButton("بارکد", callback_data='bc'),InlineKeyboardButton("لینک بر", callback_data='sl')]]
     reply_markup = InlineKeyboardMarkup(mykeyboard)
     update.message.reply_text('ابزار مورد نظر خود را انتخاب کنید 🛠', reply_markup=reply_markup)
 
-def button(update, context):
+def button(bot , update):
     query = update.callback_query
     query.answer()
     if query.data =='gc':
         #درخواست از کاربر برای ورود داده
-        context.bot.send_message(chat_id=update.message.chat_id, text="لیست اعداد را مانند مثال برای دریافت نمودار دایره ای وارد کنید [1,2,3]")
+        bot.send_message(chat_id=update.message.chat_id, text="لیست اعداد را مانند مثال برای دریافت نمودار دایره ای وارد کنید [1,2,3]")
 
     elif query.data=='t2f':
-        context.bot.send_message(chat_id=update.message.chat_id, text="متن خود را برای ترجمه به فارسی وارد بکنید ")
+        bot.send_message(chat_id=update.message.chat_id, text="متن خود را برای ترجمه به فارسی وارد بکنید ")
 
 def nemoodar(bot , update , args):
     chat_id=update.message.chat_id
@@ -47,9 +47,13 @@ def nemoodar(bot , update , args):
     bot.send_message(chat_id,text=tarjom.text)
 
 def chat(bot , update):
-    chat_id=update.message.chat_id
-    a = telegram.Message(update.meesage_id , datetime.datetime)
-    bot.sendMessage(chat_id , a)
+    init_user(update.message.from_user)
+    chat_id = update.message.from_user.id
+    global CONFIG
+    global preference_list
+    command = update.message.text[1:].replace(CONFIG['Username'], ''
+            ).lower().split()
+    bot.sendMessage(chat_id , command[0])
 
 
 mybot = telegram.Bot(token=TOKEN)
@@ -57,13 +61,10 @@ dictinfo=mybot.get_me()
 updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
 start_command = CommandHandler('start' , start , pass_args = True)
 tools_command = CommandHandler('tools',tools)
-<<<<<<< HEAD
 nemoodar_command = CommandHandler('nemoodar',nemoodar , pass_args = True)
 url_command = CommandHandler('url', chat)
-=======
-nemoodar_command = CommandHandler('nemoodar',nemoodar)
-myurl_command = CommandHandler('url',myurl)
->>>>>>> d5eb79813ad1c314342a0bccbf2e04bb77ccf6a9
+
+#>>>>>>> d5eb79813ad1c314342a0bccbf2e04bb77ccf6a9
 #one_massage = MessageHandler(Filters.all , hi)
 #one_poll = PollAnswerHandler(hi)
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
