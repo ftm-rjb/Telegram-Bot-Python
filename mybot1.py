@@ -1,8 +1,9 @@
-from telegram.ext import Updater , CommandHandler , MessageHandler , Filters
+from telegram.ext import Updater , CommandHandler , MessageHandler 
 from telegram.ext import PollAnswerHandler , CallbackQueryHandler , InlineQueryHandler
 import telegram
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+import datetime
 
 import random
 import urllib.request
@@ -38,21 +39,17 @@ def button(update, context):
     elif query.data=='t2f':
         context.bot.send_message(chat_id=update.message.chat_id, text="متن خود را برای ترجمه به فارسی وارد بکنید ")
 
-def nemoodar(update,context):
-
-    matn=update.message.text
+def nemoodar(bot , update , args):
+    chat_id=update.message.chat_id
+    matn=args[0]
     translator=Translator(service_urls=['translate.google.com'])
     tarjom=translator.translate(matn,dest='fa')
-    context.bot.send_message(chat_id=update.message.chat_id,text=tarjom.text)
+    bot.send_message(chat_id,text=tarjom.text)
 
-def myurl():
-    urlv = 'http://google.com'
-    url=urllib.request.urlopen(urlv)
-    res = url.read()
-    #jsondata=res.decode(encoding='UTF-8')
-
-    dict=json.loads(res)
-    print(dict)
+def chat(bot , update):
+    chat_id=update.message.chat_id
+    a = telegram.Message(update.meesage_id , datetime.datetime)
+    bot.sendMessage(chat_id , a)
 
 
 mybot = telegram.Bot(token=TOKEN)
@@ -60,8 +57,8 @@ dictinfo=mybot.get_me()
 updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
 start_command = CommandHandler('start' , start , pass_args = True)
 tools_command = CommandHandler('tools',tools)
-nemoodar_command = CommandHandler('nemoodar',nemoodar)
-url_command = CommandHandler('url',myurl)
+nemoodar_command = CommandHandler('nemoodar',nemoodar , pass_args = True)
+url_command = CommandHandler('url', chat)
 #one_massage = MessageHandler(Filters.all , hi)
 #one_poll = PollAnswerHandler(hi)
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
