@@ -3,7 +3,9 @@ from telegram.ext import PollAnswerHandler , CallbackQueryHandler , InlineQueryH
 import telegram
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineQueryResultArticle, InputTextMessageContent
 import datetime
+from telegram.ext import MessageHandler, Filters
 
 import random
 import urllib.request
@@ -14,6 +16,21 @@ from googletrans import Translator
 #PORT = int(os.environ.get('PORT', 5000))
 TOKEN = '1329017306:AAEdUNxL56_7y9orx7ci8ak5-pl4C-GbDmA'
 #REQUEST_KWARGS={'proxy_url': 'https://2.188.17.71:8080/'}
+
+def inline_caps(update, context):
+    query = update.inline_query.query
+    if not query:
+        return
+    results = list()
+    results.append(
+        InlineQueryResultArticle(
+            id=query.upper(),
+            title='Caps',
+            input_message_content=InputTextMessageContent(query.upper())
+        )
+    )
+    context.bot.answer_inline_query(update.inline_query.id, results)
+
 def hello(update , context):
     update.message.reply_text('Hello {}'.format(update.message.from_user.first_name))
 
@@ -22,6 +39,9 @@ def start(bot , update , args):
     first = update.message.chat.first_name
     bot.sendChatAction(chat_id , 'TYPING')
     bot.sendMessage(chat_id , 'hello {first}'.format(first = first))
+
+def echo(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id , text=update.message.text)
 
 def tools(bot , update):
     mykeyboard = [[InlineKeyboardButton("نمودار دایره ای", callback_data='gc')],
@@ -60,20 +80,25 @@ def chat(bot , update):
 mybot = telegram.Bot(token=TOKEN)
 dictinfo=mybot.get_me()
 updater = Updater(TOKEN , use_context=True)#request_kwargs=REQUEST_KWARGS)
+echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
 start_command = CommandHandler('start' , start , pass_args = True)
 tools_command = CommandHandler('tools',tools)
 nemoodar_command = CommandHandler('nemoodar',nemoodar , pass_args = True)
 url_command = CommandHandler('url', chat)
+inline_caps_handler = InlineQueryHandler(inline_caps)
 
 #>>>>>>> d5eb79813ad1c314342a0bccbf2e04bb77ccf6a9
 #one_massage = MessageHandler(Filters.all , hi)
 #one_poll = PollAnswerHandler(hi)
+updater.dispatcher.add_handler(echo_handler)
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
 updater.dispatcher.add_handler(start_command)
 updater.dispatcher.add_handler(tools_command)
 updater.dispatcher.add_handler(nemoodar_command)
 updater.dispatcher.add_handler(myurl_command)
+updater.dispatcher.add_handler(inline_caps_handler)
+
 #updater.dispatcher.add_handler(one_massage)
 #updater.dispatcher.add_handler(one_poll)
 updater.start_polling()
