@@ -14,7 +14,8 @@ from googletrans import Translator
 #PORT = int(os.environ.get('PORT', 5000))
 TOKEN = '1329017306:AAEdUNxL56_7y9orx7ci8ak5-pl4C-GbDmA'
 #REQUEST_KWARGS={'proxy_url': 'https://2.188.17.71:8080/'}
-
+def hello(bot , update):
+    update.message.reply_text('Hello {}'.format(update.message.from_user.first_name))
 
 def start(bot , update , args):
     chat_id = update.message.chat_id
@@ -67,6 +68,7 @@ url_command = CommandHandler('url', chat)
 #>>>>>>> d5eb79813ad1c314342a0bccbf2e04bb77ccf6a9
 #one_massage = MessageHandler(Filters.all , hi)
 #one_poll = PollAnswerHandler(hi)
+updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
 updater.dispatcher.add_handler(start_command)
 updater.dispatcher.add_handler(tools_command)
