@@ -14,7 +14,7 @@ from googletrans import Translator
 #PORT = int(os.environ.get('PORT', 5000))
 TOKEN = '1329017306:AAEdUNxL56_7y9orx7ci8ak5-pl4C-GbDmA'
 #REQUEST_KWARGS={'proxy_url': 'https://2.188.17.71:8080/'}
-def hello(bot , update):
+def hello(update , context):
     update.message.reply_text('Hello {}'.format(update.message.from_user.first_name))
 
 def start(bot , update , args):
@@ -59,7 +59,7 @@ def chat(bot , update):
 
 mybot = telegram.Bot(token=TOKEN)
 dictinfo=mybot.get_me()
-updater = Updater(TOKEN)#request_kwargs=REQUEST_KWARGS)
+updater = Updater(TOKEN , use_context=True)#request_kwargs=REQUEST_KWARGS)
 start_command = CommandHandler('start' , start , pass_args = True)
 tools_command = CommandHandler('tools',tools)
 nemoodar_command = CommandHandler('nemoodar',nemoodar , pass_args = True)
