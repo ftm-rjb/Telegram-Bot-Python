@@ -84,9 +84,11 @@ def main():
 
     dp.add_handler(conv_handler)
 
-updater.start_polling()
-updater.idle()
+    updater.start_polling()
+    updater.idle()
 
+if __name__ == '__main__':
+    main()
 '''updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
                           url_path=TOKEN)
