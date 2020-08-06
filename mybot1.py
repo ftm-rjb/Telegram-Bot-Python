@@ -1,111 +1,89 @@
-from telegram.ext import Updater , CommandHandler , MessageHandler
-from telegram.ext import PollAnswerHandler , CallbackQueryHandler , InlineQueryHandler
 import telegram
-from telegram import InlineQueryResultArticle, InputTextMessageContent
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram import InlineQueryResultArticle, InputTextMessageContent
-import datetime
-from telegram.ext import MessageHandler, Filters
-
+from telegram.ext import Updater , CommandHandler , MessageHandler , Filters , PollAnswerHandler , CallbackQueryHandler , InlineQueryHandler , ConversationHandler
+from telegram import InlineQueryResultArticle, InputTextMessageContent و InlineKeyboardButton, InlineKeyboardMarkup , ReplyKeyboardMarkup, ReplyKeyboardRemove
 import random
 import urllib.request
 import json
 from googletrans import Translator
+import logging
 
-#import os
-#PORT = int(os.environ.get('PORT', 5000))
 TOKEN = '1329017306:AAEdUNxL56_7y9orx7ci8ak5-pl4C-GbDmA'
 #REQUEST_KWARGS={'proxy_url': 'https://2.188.17.71:8080/'}
 
-def inline_caps(update, context):
-    query = update.inline_query.query
-    if not query:
-        return
-    results = list()
-    results.append(
-        InlineQueryResultArticle(
-            id=query.upper(),
-            title='Caps',
-            input_message_content=InputTextMessageContent(query.upper())
-        )
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+GENDER , AGE , CITY = range(3)
+
+def start(update, context):
+    reply_keyboard = [['zan' , 'mard']]
+
+    update.message.reply_text(
+        'سلام خوش آمدید' ,
+        '/cancel را بزنید برای خارج شدن \n\n' ,
+        'جنسیت خود را وارد کنید',
+        reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+
+    return GENDER
+
+def gender(update, context):
+    user = update.message.from_user
+    logger.info(" %s جنسیت: %s", user.first_name, update.message.text)
+    update.message.reply_text('اگر مایلید شهر خود را ارسال کنید' ,
+                              reply_markup=ReplyKeyboardRemove())
+
+    return CITY
+
+def city(update , context):
+    user = update.message.from_user
+    user_location = update.message.location
+    logger.info("لوکیشن %s: %f / %f", user.first_name, user_location.latitude, user_location.longitude)
+    update.message.reply_text('لطفا سن خود را وارد کنید')
+
+    return AGE
+
+def skip_city(update, context):
+    user = update.message.from_user
+    logger.info("کاربر %s لوکیشن خود را نفرستاد", user.first_name)
+    update.message.reply_text('لطفا سن خود را وارد کنید')
+
+    return AGE
+
+def age(update , context):
+    user = update.message.from_user
+    logger.info(" %s سن: %s", user.first_name, update.message.text)
+    update.message.reply_text('باتشکر')
+
+    return ConversationHandler.END
+
+def cancel(update, context):
+    user = update.message.from_user
+    logger.info("کاربر %s کنسل کرد", user.first_name)
+    update.message.reply_text('خدانگهدار',
+                              reply_markup=ReplyKeyboardRemove())
+
+    return ConversationHandler.END
+
+def main():
+    updater = Updater(token = TOKEN, use_context=True)
+    dp = updater.dispatcher
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
+
+        states={
+            GENDER: [MessageHandler(Filters.regex('^(Boy|Girl|Other)$'), gender)],
+
+            CITY: [MessageHandler(Filters.location, city),
+                       CommandHandler('skip', skip_city)],
+
+            AGE: [MessageHandler(Filters.text & ~Filters.command, age)]
+        },
+
+        fallbacks=[CommandHandler('cancel', cancel)]
     )
-    context.bot.answer_inline_query(update.inline_query.id, results)
 
-def hello(update , context):
-    update.message.reply_text('Hello {}'.format(update.message.from_user.first_name))
+    dp.add_handler(conv_handler)
 
-def start(bot , update , args):
-    chat_id = update.message.chat_id
-    first = update.message.chat.first_name
-    bot.sendChatAction(chat_id , 'TYPING')
-    bot.sendMessage(chat_id , 'hello {first}'.format(first = first))
-
-import logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                     level=logging.INFO)
-
-def echo(update, context):
-
-    context.bot.send_message(chat_id=update.message.chat_id , text=update.message.text)
-
-def tools(bot , update):
-    mykeyboard = [[InlineKeyboardButton("نمودار دایره ای", callback_data='gc')],
-                  [InlineKeyboardButton("ترجمه به فارسی", callback_data='t2f')],
-                  [InlineKeyboardButton("بارکد", callback_data='bc'),InlineKeyboardButton("لینک بر", callback_data='sl')]]
-    reply_markup = InlineKeyboardMarkup(mykeyboard)
-    update.message.reply_text('ابزار مورد نظر خود را انتخاب کنید 🛠', reply_markup=reply_markup)
-
-def button(bot , update):
-    query = update.callback_query
-    query.answer()
-    if query.data =='gc':
-        #درخواست از کاربر برای ورود داده
-        bot.send_message(chat_id=update.message.chat_id, text="لیست اعداد را مانند مثال برای دریافت نمودار دایره ای وارد کنید [1,2,3]")
-
-    elif query.data=='t2f':
-        bot.send_message(chat_id=update.message.chat_id, text="متن خود را برای ترجمه به فارسی وارد بکنید ")
-
-def nemoodar(bot , update , args):
-    chat_id=update.message.chat_id
-    matn=args[0]
-    translator=Translator(service_urls=['translate.google.com'])
-    tarjom=translator.translate(matn,dest='fa')
-    bot.send_message(chat_id,text=tarjom.text)
-
-def chat(bot , update):
-    init_user(update.message.from_user)
-    chat_id = update.message.from_user.id
-    global CONFIG
-    global preference_list
-    command = update.message.text[1:].replace(CONFIG['Username'], ''
-            ).lower().split()
-    bot.sendMessage(chat_id , command[0])
-
-
-mybot = telegram.Bot(token=TOKEN)
-dictinfo=mybot.get_me()
-updater = Updater(TOKEN , use_context=True)#request_kwargs=REQUEST_KWARGS)
-echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-start_command = CommandHandler('start' , start , pass_args = True)
-tools_command = CommandHandler('tools',tools)
-nemoodar_command = CommandHandler('nemoodar',nemoodar , pass_args = True)
-url_command = CommandHandler('url', chat)
-inline_caps_handler = InlineQueryHandler(inline_caps)
-
-#>>>>>>> d5eb79813ad1c314342a0bccbf2e04bb77ccf6a9
-#one_massage = MessageHandler(Filters.all , hi)
-#one_poll = PollAnswerHandler(hi)
-updater.dispatcher.add_handler(echo_handler)
-updater.dispatcher.add_handler(CommandHandler('hello', hello))
-updater.dispatcher.add_handler(CallbackQueryHandler(button))
-updater.dispatcher.add_handler(start_command)
-updater.dispatcher.add_handler(tools_command)
-updater.dispatcher.add_handler(nemoodar_command)
-updater.dispatcher.add_handler(myurl_command)
-updater.dispatcher.add_handler(inline_caps_handler)
-
-#updater.dispatcher.add_handler(one_massage)
-#updater.dispatcher.add_handler(one_poll)
 updater.start_polling()
 updater.idle()
 
