@@ -16,12 +16,10 @@ logger = logging.getLogger(__name__)
 GENDER , AGE , CITY = range(3)
 
 def start(update, context):
-    reply_keyboard = [['zan' , 'mard']]
+    reply_keyboard = [['Male' , 'Female']]
 
     update.message.reply_text(
-        'سلام خوش آمدید' ,
-        '/cancel را بزنید برای خارج شدن \n\n' ,
-        'جنسیت خود را وارد کنید',
+        'hi every one',
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
     return GENDER
@@ -44,22 +42,22 @@ def city(update , context):
 
 def skip_city(update, context):
     user = update.message.from_user
-    logger.info("کاربر %s لوکیشن خود را نفرستاد", user.first_name)
-    update.message.reply_text('لطفا سن خود را وارد کنید')
+    logger.info('%s dont send city', user.first_name)
+    update.message.reply_text('enter your age')
 
     return AGE
 
 def age(update , context):
     user = update.message.from_user
-    logger.info(" %s سن: %s", user.first_name, update.message.text)
-    update.message.reply_text('باتشکر')
+    logger.info("age %s: %s", user.first_name, update.message.text)
+    update.message.reply_text('thank u')
 
     return ConversationHandler.END
 
 def cancel(update, context):
     user = update.message.from_user
-    logger.info("کاربر %s کنسل کرد", user.first_name)
-    update.message.reply_text('خدانگهدار',
+    logger.info("%s canceled ", user.first_name)
+    update.message.reply_text('bye',
                               reply_markup=ReplyKeyboardRemove())
 
     return ConversationHandler.END
@@ -71,7 +69,7 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            GENDER: [MessageHandler(Filters.regex('^(Boy|Girl|Other)$'), gender)],
+            GENDER: [MessageHandler(Filters.regex('^(Male|Female)$'), gender)],
 
             CITY: [MessageHandler(Filters.location, city),
                        CommandHandler('skip', skip_city)],
