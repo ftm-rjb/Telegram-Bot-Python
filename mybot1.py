@@ -40,8 +40,13 @@ def start(bot , update , args):
     bot.sendChatAction(chat_id , 'TYPING')
     bot.sendMessage(chat_id , 'hello {first}'.format(first = first))
 
+import logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                     level=logging.INFO)
+
 def echo(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id , text=update.message.text)
+
+    context.bot.send_message(chat_id=update.message.chat_id , text=update.message.text)
 
 def tools(bot , update):
     mykeyboard = [[InlineKeyboardButton("نمودار دایره ای", callback_data='gc')],
