@@ -1,6 +1,6 @@
 import telegram
 from telegram.ext import Updater , CommandHandler , MessageHandler , Filters , PollAnswerHandler , CallbackQueryHandler , InlineQueryHandler , ConversationHandler
-from telegram import InlineQueryResultArticle, InputTextMessageContent و InlineKeyboardButton, InlineKeyboardMarkup , ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import InlineQueryResultArticle, InputTextMessageContent , InlineKeyboardButton, InlineKeyboardMarkup , ReplyKeyboardMarkup, ReplyKeyboardRemove
 import random
 import urllib.request
 import json
