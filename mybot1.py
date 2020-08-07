@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 L = []
 
-ONE , TWO , THREE , FOUR = range(4)
+ONE , TWO , THREE , FOUR  , S = range(5)
 
 def start(update, context):
     reply_keyboard = [['چت با دوستان' , 'دریافت ارسالها']]
@@ -20,10 +20,13 @@ def start(update, context):
         'سلام خوش آمدید',
         'یکی از دو گزینه را انتخاب کنید',
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return S
+
+def s(update, context):
 
     if update.message.text == 'چت با دوستان':
         return ONE
-    if update.message.text == 'دریافت ارسالها':
+    elif update.message.text == 'دریافت ارسالها':
         return TWO
 
     #url = helpers.create_deep_linked_url(bot.get_me().username)
