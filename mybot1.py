@@ -19,14 +19,7 @@ def start(update, context):
     text = "Feel free to tell your friends about it:\n\n" + url
     update.message.reply_text(text)
     update.message.chat.id
-    bot.sendMessage(user , update.message.chat.id)
-    bot.sendMessage(user , update.message.message_id)
-
-def echo(update, context):
-    update.message.reply_text(update.message.text)
-
-
-
+    bot.sendMessage(439236381 , update.message.text)
 
 def main():
 
@@ -46,7 +39,6 @@ def main():
 
     # Make sure the deep-linking handlers occur *before* the normal /start handler.
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
     # Start the Bot
     updater.start_polling()
 
