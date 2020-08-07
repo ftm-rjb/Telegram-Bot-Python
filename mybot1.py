@@ -12,46 +12,22 @@ logger = logging.getLogger(__name__)
 
 L = []
 
-ONE , TWO , THREE , FOUR  , S = range(5)
+ONE , THREE = range(2)
 
 def start(update, context):
-    reply_keyboard = [['چت با دوستان' , 'دریافت ارسالها']]
     update.message.reply_text(
         'سلام خوش آمدید',
-        'یکی از دو گزینه را انتخاب کنید',
-        reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
-    return S
-
-def s(update, context):
-
-    if update.message.text == 'چت با دوستان':
-        return ONE
-    elif update.message.text == 'دریافت ارسالها':
-        return TWO
-
-    #url = helpers.create_deep_linked_url(bot.get_me().username)
+        'بیام خود را بنویسید')
+    return ONE
 
 def one(update , context):
-    update.message.reply_text('لطفا آی دی موردنظر را بفرستید' ,
-                              reply_markup=ReplyKeyboardRemove())
+    pm = update.message.text
+    update.message.reply_text('لطفا آی دی موردنظر را بفرستید')
     return THREE
 
 def three(update , context):
     id = update.message.text
-    update.message.reply_text('لطفا بیام خود را بنویسید' ,
-                              reply_markup=ReplyKeyboardRemove())
-    return FOUR
-
-def four(update , context):
-    pm = update.message.text
-    L.append(pm)
     context.bot.sendMessage(int(id) , pm)
-    update.message.reply_text('خدانگهدار',
-                              reply_markup=ReplyKeyboardRemove())
-    return ConversationHandler.END
-
-def two(update , context):
-    context.bot.sendMessage(int(id) , L)
     return ConversationHandler.END
 
 def cancel(update, context):
@@ -72,15 +48,9 @@ def main():
 
         states={
 
-            S: [MessageHandler(Filters.regex('^(چت با دوستان|دریافت ارسالها)$'), s)],
-
             ONE: [MessageHandler(Filters.text & ~Filters.command, one)],
 
-            TWO: [MessageHandler(Filters.text & ~Filters.command, two)],
-
             THREE: [MessageHandler(Filters.text & ~Filters.command, three)],
-
-            FOUR: [MessageHandler(Filters.text & ~Filters.command, four)]
         },
 
         fallbacks=[CommandHandler('cancel', cancel)]
