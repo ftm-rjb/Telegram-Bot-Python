@@ -12,17 +12,20 @@ logger = logging.getLogger(__name__)
 
 L = []
 
-CHECK_THIS_OUT = 'check-this-out'
-USING_ENTITIES = 'using-entities-here'
-SO_COOL = 'so-cool'
-
 def start(update, context):
     bot = context.bot
-    url = helpers.create_deep_linked_url(bot.get_me().username, CHECK_THIS_OUT, group=True)
+    url = helpers.create_deep_linked_url(bot.get_me().username)
     text = "Feel free to tell your friends about it:\n\n" + url
     update.message.reply_text(text)
+    user = update.message.text
+    L.append(user + '\n')
 
-def deep_linked_level_1(update, context):
+def echo(update, context):
+    update.message.reply_text(update.message.text)
+
+
+
+"""def deep_linked_level_1(update, context):
     bot = context.bot
     url = helpers.create_deep_linked_url(bot.get_me().username, SO_COOL)
     text = "Awesome, you just accessed hidden functionality! " \
@@ -45,7 +48,7 @@ def deep_linked_level_3(update, context):
     payload = context.args
     update.message.reply_text("Congratulations! This is as deep as it gets 👏🏻\n\n"
                               "The payload was: {}".format(payload))
-
+"""
 def main():
 
     # Create the Updater and pass it your bot's token.
@@ -58,16 +61,9 @@ def main():
     # https://core.telegram.org/bots#deep-linking
 
     # Register a deep-linking handler
-    dp.add_handler(CommandHandler("start", deep_linked_level_1, Filters.regex(CHECK_THIS_OUT)))
 
     # This one works with a textual link instead of an URL
-    dp.add_handler(CommandHandler("start", deep_linked_level_2, Filters.regex(SO_COOL)))
 
-    # We can also pass on the deep-linking payload
-    dp.add_handler(CommandHandler("start",
-                                  deep_linked_level_3,
-                                  Filters.regex(USING_ENTITIES),
-                                  pass_args=True))
 
     # Make sure the deep-linking handlers occur *before* the normal /start handler.
     dp.add_handler(CommandHandler("start", start))
