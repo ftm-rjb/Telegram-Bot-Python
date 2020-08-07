@@ -71,9 +71,12 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            ONE: [MessageHandler(Filters.regex('^(چت با دوستان|دریافت ارسالها)$'), one)],
 
-            TWO: [MessageHandler(Filters.regex('^(چت با دوستان|دریافت ارسالها)$'), two)],
+            S: [MessageHandler(Filters.regex('^(چت با دوستان|دریافت ارسالها)$'), s)],
+
+            ONE: [MessageHandler(Filters.text & ~Filters.command, one)],
+
+            TWO: [MessageHandler(Filters.text & ~Filters.command, two)],
 
             THREE: [MessageHandler(Filters.text & ~Filters.command, three)],
 
