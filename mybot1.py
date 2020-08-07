@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 L = []
 
-ONE , THREE = range(2)
+ONE = range(1)
 
 def start(update, context):
     update.message.reply_text(
@@ -22,14 +22,10 @@ def start(update, context):
 
 def one(update , context):
     pm = update.message.text
-    context.bot.sendMessage(439236381 , pm)
     update.message.reply_text('لطفا آی دی موردنظر را بفرستید',
                                 reply_markup=ReplyKeyboardRemove())
-    return THREE
-
-def three(update , context):
     id = update.message.text
-    context.bot.sendMessage(439236381 , pm)
+    context.bot.sendMessage(int(id) , pm)
     return ConversationHandler.END
 
 def cancel(update, context):
@@ -52,7 +48,7 @@ def main():
 
             ONE: [MessageHandler(Filters.text & ~Filters.command, one)],
 
-            THREE: [MessageHandler(Filters.text & ~Filters.command, three)],
+    
         },
 
         fallbacks=[CommandHandler('cancel', cancel)]
