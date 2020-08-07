@@ -19,7 +19,7 @@ def start(update, context):
     text = "Feel free to tell your friends about it:\n\n" + url
     update.message.reply_text(text)
     update.message.chat.id
-    bot.sendMessage(439236381 , update.message.text)
+    update.message.reply_text(439236381 , update.message.text)
 
 def main():
 
