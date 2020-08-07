@@ -13,42 +13,21 @@ logger = logging.getLogger(__name__)
 L = []
 
 def start(update, context):
+    user = update.message.chat_id
     bot = context.bot
     url = helpers.create_deep_linked_url(bot.get_me().username)
     text = "Feel free to tell your friends about it:\n\n" + url
     update.message.reply_text(text)
-    user = update.message.text
-    L.append(user + '\n')
+    update.message.chat.id
+    bot.sendMessage(user , update.message.chat.id)
+    bot.sendMessage(user , update.message.message_id)
 
 def echo(update, context):
     update.message.reply_text(update.message.text)
 
 
 
-"""def deep_linked_level_1(update, context):
-    bot = context.bot
-    url = helpers.create_deep_linked_url(bot.get_me().username, SO_COOL)
-    text = "Awesome, you just accessed hidden functionality! " \
-           " Now let's get back to the private chat."
-    keyboard = InlineKeyboardMarkup.from_button(
-        InlineKeyboardButton(text='Continue here!', url=url)
-    )
-    update.message.reply_text(text, reply_markup=keyboard)
 
-
-def deep_linked_level_2(update, context):
-    bot = context.bot
-    url = helpers.create_deep_linked_url(bot.get_me().username, USING_ENTITIES)
-    text = "You can also mask the deep-linked URLs as links: " \
-           "[▶️ CLICK HERE]({}).".format(url)
-    update.message.reply_text(text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
-
-
-def deep_linked_level_3(update, context):
-    payload = context.args
-    update.message.reply_text("Congratulations! This is as deep as it gets 👏🏻\n\n"
-                              "The payload was: {}".format(payload))
-"""
 def main():
 
     # Create the Updater and pass it your bot's token.
@@ -67,7 +46,7 @@ def main():
 
     # Make sure the deep-linking handlers occur *before* the normal /start handler.
     dp.add_handler(CommandHandler("start", start))
-
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
     # Start the Bot
     updater.start_polling()
 
@@ -75,6 +54,10 @@ def main():
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
+
+if __name__ == '__main__':
+    main()
+
 
 '''
 def start(update, context):
@@ -151,9 +134,6 @@ def main():
     updater.start_polling()
     updater.idle()
 '''
-
-if __name__ == '__main__':
-    main()
 
 '''updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
