@@ -28,7 +28,7 @@ def one(update , context):
 
 def three(update , context):
     id = update.message.text
-    context.bot.sendMessage(int(id) , pm)
+    context.bot.sendMessage(439236381 , pm)
     return ConversationHandler.END
 
 def cancel(update, context):
