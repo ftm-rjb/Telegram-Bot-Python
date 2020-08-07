@@ -22,10 +22,11 @@ def start(update, context):
 
 def one(update , context):
     pm = update.message.text
+    L.append(pm)
     update.message.reply_text('لطفا آی دی موردنظر را بفرستید',
                                 reply_markup=ReplyKeyboardRemove())
     id = update.message.text
-    context.bot.sendMessage(int(id) , pm)
+    context.bot.sendMessage(int(id) , L[len(L)-1])
     return ConversationHandler.END
 
 def cancel(update, context):
@@ -48,7 +49,7 @@ def main():
 
             ONE: [MessageHandler(Filters.text & ~Filters.command, one)],
 
-    
+
         },
 
         fallbacks=[CommandHandler('cancel', cancel)]
