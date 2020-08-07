@@ -16,8 +16,8 @@ ONE , THREE = range(2)
 
 def start(update, context):
     update.message.reply_text(
-        'سلام خوش آمدید',
-        'بیام خود را بنویسید')
+        'سلام خوش آمدیدم خود را بنویسید',
+        reply_markup=ReplyKeyboardRemove())
     return ONE
 
 def one(update , context):
