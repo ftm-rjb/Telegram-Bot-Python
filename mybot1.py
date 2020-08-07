@@ -22,6 +22,7 @@ def start(update, context):
 
 def one(update , context):
     pm = update.message.text
+    context.bot.sendMessage(439236381 , pm)
     update.message.reply_text('لطفا آی دی موردنظر را بفرستید',
                                 reply_markup=ReplyKeyboardRemove())
     return THREE
