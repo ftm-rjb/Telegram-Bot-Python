@@ -12,14 +12,49 @@ logger = logging.getLogger(__name__)
 
 L = []
 
+ONE , TWO , THREE , FOUR = range(4)
+
 def start(update, context):
-    user = update.message.chat_id
-    bot = context.bot
-    url = helpers.create_deep_linked_url(bot.get_me().username)
-    text = "Feel free to tell your friends about it:\n\n" + url
-    update.message.reply_text(text)
-    update.message.chat.id
-    update.message.reply_text(439236381 , update.message.text)
+    reply_keyboard = [['چت با دوستان' , 'دریافت ارسالها']]
+    update.message.reply_text(
+        'سلام خوش آمدید',
+        'یکی از دو گزینه را انتخاب کنید',
+        reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+
+    if update.message.text == 'چت با دوستان':
+        return ONE
+    if update.message.text == 'دریافت ارسالها':
+        return TWO
+
+    #url = helpers.create_deep_linked_url(bot.get_me().username)
+
+def one(update , context):
+    update.message.reply_text('لطفا آی دی موردنظر را بفرستید' ,
+                              reply_markup=ReplyKeyboardRemove())
+    return THREE
+
+def three(update , context):
+    id = update.message.text
+    update.message.reply_text('لطفا بیام خود را بنویسید' ,
+                              reply_markup=ReplyKeyboardRemove())
+    return FOUR
+
+def four(update , context):
+    pm = update.message.text
+    L.append(pm)
+    context.bot.sendMessage(int(id) , pm)
+    update.message.reply_text('خدانگهدار',
+                              reply_markup=ReplyKeyboardRemove())
+    return ConversationHandler.END
+
+def two(update , context):
+    context.bot.sendMessage(int(id) , L)
+    return ConversationHandler.END
+
+def cancel(update, context):
+    update.message.reply_text('خدانگهدار',
+                              reply_markup=ReplyKeyboardRemove())
+    return ConversationHandler.END
 
 def main():
 
@@ -29,17 +64,22 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    # More info on what deep linking actually is (read this first if it's unclear to you):
-    # https://core.telegram.org/bots#deep-linking
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
 
-    # Register a deep-linking handler
+        states={
+            ONE: [MessageHandler(Filters.regex('^(چت با دوستان|دریافت ارسالها)$'), one)],
 
-    # This one works with a textual link instead of an URL
+            TWO: [MessageHandler(Filters.regex('^(چت با دوستان|دریافت ارسالها)$'), two)],
 
+            THREE: [MessageHandler(Filters.text & ~Filters.command, three)],
 
-    # Make sure the deep-linking handlers occur *before* the normal /start handler.
-    dp.add_handler(CommandHandler("start", start))
-    # Start the Bot
+            FOUR: [MessageHandler(Filters.text & ~Filters.command, four)]
+        },
+
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+
     updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
