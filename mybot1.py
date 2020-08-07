@@ -79,7 +79,7 @@ def main():
 
         fallbacks=[CommandHandler('cancel', cancel)]
     )
-
+    dp.add_handler(conv_handler)
     updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
