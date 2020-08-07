@@ -22,7 +22,8 @@ def start(update, context):
 
 def one(update , context):
     pm = update.message.text
-    update.message.reply_text('لطفا آی دی موردنظر را بفرستید')
+    update.message.reply_text('لطفا آی دی موردنظر را بفرستید',
+                                reply_markup=ReplyKeyboardRemove()))
     return THREE
 
 def three(update , context):
